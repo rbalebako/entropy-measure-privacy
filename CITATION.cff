@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "entropy-measure-privacy"
+type: software
+authors:
+  - family-names: "Balebako"
+    given-names: "Rebecca"
+license: Apache-2.0
+repository-code: "https://github.com/rbalebako/entropy-measure-privacy"
+references:
+  - type: conference-paper
+    title: "An entropy-based analytic model for the privacy-preserving in open data"
+    authors:
+      - family-names: "Kim"
+        given-names: "S.-H."
+      - family-names: "Jung"
+        given-names: "C."
+      - family-names: "Lee"
+        given-names: "Y.-J."
+    collection-title: "2016 IEEE International Conference on Big Data (Big Data)"
+    year: 2016
+    start: 3676
+    end: 3684
+    doi: "10.1109/BigData.2016.7841035"
