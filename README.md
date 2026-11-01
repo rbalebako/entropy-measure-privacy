@@ -1,76 +1,56 @@
-# entropy-measure-privacy
+# Entropy-Based Privacy Risk Analysis
 
-Entropy-based privacy risk analysis for a tabular dataset, following the method in:
+A small, exploratory implementation of an entropy-based method for examining how quasi-identifiers can expose a sensitive attribute in tabular data. The notebooks use a reproducible, synthetic dataset; no real or personal data is included.
 
-S.-H. Kim, C. Jung, and Y.-J. Lee, "An entropy-based analytic model for the privacy-preserving in open data,"
-2016 IEEE International Conference on Big Data (Big Data), Dec. 2016, pp. 3676–3684.
-doi: [10.1109/BigData.2016.7841035](https://doi.org/10.1109/BigData.2016.7841035)
+The analysis follows S.-H. Kim, C. Jung, and Y.-J. Lee, [“An entropy-based analytic model for the privacy-preserving in open data”](https://doi.org/10.1109/BigData.2016.7841035), *2016 IEEE International Conference on Big Data*, pp. 3676–3684.
 
-The goal is to get an overall sense of how privacy-sensitive a dataset is, and which quasi-identifiers
-make it sensitive. The data used here is synthetic.
+> This is an independent implementation, not the authors' code and not affiliated with them. Scores are exploratory indicators, **not a privacy guarantee**. A low score does not establish that a dataset is safe to release.
 
-> **Note:** This is an independent implementation based on the paper above. It is not the authors' code and is not
-> affiliated with them. The results are exploratory and are **not a privacy guarantee**: a low risk score does not
-> mean a dataset is safe to release.
+This is specifically an exploratory example, not a production-ready privacy assessment.
 
-## Notebooks
-
-| Notebook | Purpose |
-|---|---|
-| `dataset_create_and_explore.ipynb` | Generates a 1000-row synthetic dataset, describes it, and writes `synthetic_dataset.csv` |
-| `entropy_privacypreserving.ipynb` | Computes matching probabilities, entropy measures, re-identification risk, and per-column sensitivity |
-
-Run `dataset_create_and_explore.ipynb` first: `synthetic_dataset.csv` is git-ignored and must be generated locally.
-
-### Dataset columns
-
-| Column | Description |
-|---|---|
-| `text_message` | Short example text messages (sensitive attribute) |
-| `url` | Example URLs |
-| `language` | Language of the message |
-| `country` | Country of origin |
-| `device` | Device type (Mobile / Desktop / Tablet) |
-| `star_review` | 5-star review rating (1–5) |
-
-## Code
+## Repository Contents
 
 | File | Purpose |
 |---|---|
-| `entropy.py` | `shannon_entropy(data)`: Shannon entropy, in bits, of the empirical distribution of a sequence |
-| `test_entropy.py` | pytest tests for `entropy.py` |
+| `dataset_create_and_explore.ipynb` | Creates and explores a 1,000-row synthetic dataset, then writes `synthetic_dataset.csv`. |
+| `entropy_privacypreserving.ipynb` | Examines matching probabilities, entropy, re-identification risk, and quasi-identifier sensitivity. |
+| `entropy.py` | Provides `shannon_entropy(data)`, the empirical Shannon entropy in bits. |
+| `test_entropy.py` | Unit tests for the entropy helper. |
 
-## Method summary
+The generated CSV is ignored by git. Run the dataset notebook before the analysis notebook.
 
-- **L-entity**: the dataset to be released, including the sensitive attribute.
-- **I-entity**: what an attacker knows, i.e. the quasi-identifiers only.
-- **Matching probability** P(s|i): share of each sensitive value among records with the same quasi-identifiers.
-- **Matching entropy** H, **maximum entropy** H_max = log2(n), and **relative entropy** D = H_max − H per I-entity.
-- **Risk** = D / H_max × 100; dataset risk is the maximum entity risk.
-- **Sensitivity analysis**: drop one quasi-identifier at a time to see which contributes most to risk.
+The synthetic dataset contains `text_message` (the example sensitive attribute), `url`, `language`, `country`, `device`, and `star_review`.
 
-## Setup
+## Quick Start
+
+Use Python 3.10 or newer. From the repository directory:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate        # macOS / Linux
-# .venv\Scripts\activate         # Windows
-pip install -r requirements.txt
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate   # Windows
+python -m pip install -r requirements.txt
 jupyter notebook
 ```
 
-Then run `dataset_create_and_explore.ipynb`, followed by `entropy_privacypreserving.ipynb`.
+Run `dataset_create_and_explore.ipynb` first, then `entropy_privacypreserving.ipynb`.
 
-Run the tests with:
+Run the unit tests with:
 
 ```bash
-pytest
+python -m pytest
 ```
 
-## Dependencies
+## Method at a Glance
 
-See [requirements.txt](requirements.txt): pandas, numpy, matplotlib, scipy, Jupyter, and pytest.
+- The **L-entity** is the dataset being considered for release, including its sensitive attribute.
+- The **I-entity** represents an attacker’s auxiliary information, modeled here as quasi-identifiers.
+- For each quasi-identifier group, matching probabilities describe the distribution of sensitive values.
+- Per I-entity, the notebooks calculate matching entropy $H$, maximum entropy $H_{max} = \log_2(n)$, and relative entropy $D = H_{max} - H$.
+- The reported risk is $D / H_{max} \times 100$; dataset risk is the maximum entity risk. The sensitivity analysis removes one quasi-identifier at a time and compares the resulting risk.
 
-## License
+These metrics depend on the data, attribute choices, and modeling assumptions. They should not be used alone to make release decisions.
 
-Apache License 2.0. See [LICENSE](LICENSE).
+## License and Citation
+
+The project is available under the Apache License 2.0; see [LICENSE](LICENSE). Citation metadata is provided in [CITATION.cff](CITATION.cff).
